@@ -1,3 +1,14 @@
+# Hask-Hello
+
+This is a Haskell modification of the original Hello World project from the Gramine repo.
+
+Its ran using:
+
+```
+make SGX=1
+gramine-sgx helloworld
+```
+
 # Hello World
 
 This directory contains a Makefile and a manifest template for running a simple
