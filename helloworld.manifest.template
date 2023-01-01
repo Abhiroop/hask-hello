@@ -2,9 +2,12 @@
 
 loader.entrypoint = "file:{{ gramine.libos }}"
 libos.entrypoint = "/helloworld"
-loader.log_level = "trace"
+loader.log_level = "{{ log_level }}" #"trace" for entire logs
 
 loader.env.LD_LIBRARY_PATH = "/lib:/lib/x86_64-linux-gnu"
+
+# Check https://gramine.readthedocs.io/en/v1.2/devel/performance.html#glibc-malloc-tuning
+loader.env.MALLOC_ARENA_MAX = "1"
 
 fs.mounts = [
   { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
@@ -18,6 +21,7 @@ fs.mounts = [
   { path = "/lib/x86_64-linux-gnu/libdl.so.2"     , uri = "file:/lib/x86_64-linux-gnu/libdl.so.2" },
   { path = "/lib/x86_64-linux-gnu/libpthread.so.0", uri = "file:/lib/x86_64-linux-gnu/libpthread.so.0" },
   { path = "/lib/x86_64-linux-gnu/libc.so.6"      , uri = "file:/lib/x86_64-linux-gnu/libc.so.6" },
+  { path = "/lib/x86_64-linux-gnu/libutil.so.1"   , uri = "file:/lib/x86_64-linux-gnu/libutil.so.1" },
 ]
 
 sgx.debug = true
@@ -35,8 +39,9 @@ sgx.trusted_files = [
   "file:/lib/x86_64-linux-gnu/libdl.so.2",
   "file:/lib/x86_64-linux-gnu/libpthread.so.0",
   "file:/lib/x86_64-linux-gnu/libc.so.6",
+  "file:/lib/x86_64-linux-gnu/libutil.so.1",
   "file:test.txt",
 ]
 
-sys.insecure__allow_eventfd = true
+sys.insecure__allow_eventfd = true # necessary for the GHC runtime in the TCP server
 sgx.thread_num = 8
